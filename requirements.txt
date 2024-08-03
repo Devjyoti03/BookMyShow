@@ -1,0 +1,6 @@
+flask
+gunicorn
+pymongo
+python-dotenv
+geocoder
+pillow
