@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>BookMyShow</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='img/fav.png')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'book.css')}}">
+
+    <!-- Javascript -->
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/jquery-migrate-3.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="assets/js/jquery.backstretch.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <section>
+        <div class="star star1"></div>
+        <div class="star star2"></div>
+        <div class="star star3"></div>
+        <div class="star star4"></div>
+        <div class="star star5"></div>
+        <div class="star star6"></div>
+        <div class="star star7"></div>
+        <div class="star star8"></div>
+    </section>
+    <!-- Wrapper -->
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+
+            <nav class="sidenavbar">
+                {% if user %}
+                <h1>Hey, {{(user.username).split(" ")[0]}}!</h1>
+                    {% else %}
+                <h1>Hey, Guest!</h1>
+                {% endif %}
+            </nav>
+
+            <nav class="sidesubnavbar">
+                <img src="{{url_for('static', filename = 'img/rewards.webp')}}">
+                <p>Unlock special offers & great benifits</p>
+                {% if user %}
+                <div class="points">Points : {{user.points}}</div>
+                <button class="button" id="addPointsBtn">Add Points</button>
+                {% else %}
+                <button class="login" onclick="window.location.href='/login' ">Login / Register</button>
+                {% endif %}
+            </nav>
+
+            {% if recharge_message %}
+            <p class="recharge-message">&#9888; {{ recharge_message }}</p>
+        {% endif %}
+    
+
+            <a href="#">
+                <div class="lefticon">
+                    <ion-icon name="notifications-outline"></ion-icon>
+                </div>
+                <div class="text">Notifications</div>
+                <div class="righticon">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </div>
+            </a>
+            {% if user %}
+            <a onclick="showHistory()" >
+                {% else %}
+                <a class="btn-disabled" href="#">
+                    {% endif %}
+                <div class="lefticon">
+                    <ion-icon name="ticket-outline"></ion-icon>
+                </div>
+                <div class="text">Purchase History<br>
+                    <div class="subtext">View all your bookings & Purchases</div>
+                </div>
+                <div class="righticon">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                </div>
+            </a>
+            <a class="btn-disabled" href="#">
+                <div class="lefticon">
+                    <ion-icon name="tv-outline"></ion-icon>
+                </div>
+                <div class="text">Stream Library<br>
+                    <div class="subtext">Rented & Purchased Movies</div>
+                </div>
+                <div class="righticon">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                </div>
+            </a>
+            <a href="#">
+                <div class="lefticon">
+                    <ion-icon name="cash-outline"></ion-icon>
+                </div>
+                <div class="text">Play Credit Card<br>
+                    <div class="subtext">View your Play Credit Card details and offers</div>
+                </div>
+                <div class="righticon">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </div>
+            </a>
+            <a href="#">
+                <div class="lefticon">
+                    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                </div>
+                <div class="text">Help & Support<br>
+                    <div class="subtext">View commonly asked queries and Chat</div>
+                </div>
+                <div class="righticon">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </div>
+            </a>
+            <a class="btn-disabled" href="#">
+                <div class="lefticon">
+                    <ion-icon name="settings-outline"></ion-icon>
+                </div>
+                <div class="text">Accounts & Settings<br>
+                    <div class="subtext">Location, Payments, Addresses & More</div>
+                </div>
+                <div class="righticon">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                </div>
+            </a>
+            <a href="#">
+                <div class="lefticon">
+                    <ion-icon name="gift-outline"></ion-icon>
+                </div>
+                <div class="text">Rewards<br>
+                    <div class="subtext">View your rewards & unlock new ones</div>
+                </div>
+                <div class="righticon">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </div>
+            </a>
+            <a href="#">
+                <div class="lefticon">
+                    <ion-icon name="heart-outline"></ion-icon>
+                </div>
+                <div class="text">BookASmile</div>
+                <div class="righticon">
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
+                </div>
+            </a>
+
+        </nav>
+        <!-- End sidebar -->
+
+        <!-- Dark overlay -->
+        <div class="overlay"></div>
+        <div class="historyContainer">  </div>
+        <!-- Content -->
+        <div class="content">
+
+            <nav class="navbar">
+                <div class="logos">
+                    <!-- <img src="{{url_for('static', filename = 'img/logo.png')}}" class="brand-logo" alt="" /> -->
+                </div>
+                <div class='input'>
+                    <ion-icon name="search"></ion-icon>
+                    <input className='search'
+                        placeholder='Search for Movies, Events, Plays, Sports, and Activities'></input>
+                </div>
+                <div class="right-container">
+                    <div class="dark">
+                        <img src="{{url_for('static', filename = 'img/sun.png')}}" id="ican">
+                    </div>
+                    <a href="#" class="location">Kolkata<ion-icon name="caret-down-sharp"></ion-icon></a>
+                    {% if user %}
+                <div onclick="showUserDetails()" class="signin active">{{user.username.split(" ")[0]}}</div>
+                
+                <div class="user-details" id="user-details" style="display: none;">
+                    <h2>User Details:</h2>
+                    <p>Name: {{ user.username }}</p>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Email: {{ user.phone }}</p>
+                    <p>Points: {{ user.points }}</p>
+                    <button class="close-btn" onclick="hideUserDetails()">Close</button>
+                </div>
+                
+                
+                {% else %}
+                    <button class="signin" onclick="window.location.href='/login'">Login</button>
+                        {% endif %}
+                    <div id="id01" class="modal">
+
+                        <div class="modal-content">
+                            <div class="getstart">
+                                <h3>Get Started</h3>
+                                <span onclick="document.getElementById('id01').style.display='none'" class="close"
+                                    title="Close Modal">
+                                    <ion-icon name="close-outline"></ion-icon>
+                                </span>
+                            </div>
+
+                            <div class="container">
+                                <a href="#" class="button">
+                                    <div class="logo">
+                                        <img src="{{url_for('static', filename = 'img/googlelogo.svg')}}">
+                                    </div>
+                                    <div class="text">Continue with Google</div>
+                                </a>
+                                <a href="#" class="button">
+                                    <div class="logo">
+                                        <ion-icon name="mail-outline" style="font-size: 22px;"></ion-icon>
+                                    </div>
+                                    <div class="text">Continue with Email</div>
+                                </a>
+                                <a href="#" class="button">
+                                    <div class="logo">
+                                        <ion-icon name="logo-apple" style="font-size: 22px;"></ion-icon>
+                                    </div>
+                                    <div class="text">Continue with Apple</div>
+                                </a>
+                            </div>
+                            <h2>OR</h2>
+
+                            <div class="phone">
+                                <img alt="indian flag" src="{{url_for('static', filename = 'img/indianflag.svg')}}">
+                                <div class="code">+91</div>
+                                <input id="mobileNo" type="tel" pattern="[0-9]*"
+                                    placeholder="Continue with mobile number" class="mobileNo">
+                            </div>
+
+                            <p>I agree to the <u>Terms & Conditions</u>&<u>Privacy Policy</u></p>
+
+                        </div>
+
+                    </div>
+
+                    <a href="#" class="btn-customized open-menu">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </a>
+                </div>
+            </nav>
+
+            <nav class="subnavbar">
+                <ul class='navitem'>
+                    <li><a href='#Movies'>Movies</a></li>
+                    <li><a href='#Movies'>Stream<span>NEW</span></a></li>
+                    <li><a href='#Movies'>Events</a></li>
+                    <li><a href='#Movies'>Plays</a></li>
+                    <li><a href='#Movies'>Sports</a></li>
+                    <li><a href='#Movies'>Activities</a></li>
+                    <li><a href='#Movies'>Buzz</a></li>
+                </ul>
+                <ul class='navitem1'>
+                    <li><a href='#Movies'>ListYourShow<span>NEW</span></a></li>
+                    <li><a href='#Movies'>Corporates</a></li>
+                    <li><a href='#Movies'>Offers</a></li>
+                    <li><a href='#Movies'>Gift Cards</a></li>
+                </ul>
+            </nav>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <!-- <div class="slider">
+                    <img src="img/banner/banner1.webp" alt="">
+                </div> -->
+                </div>
+            </div>
+
+            <script src="{{url_for('static', filename = 'data.js')}}"></script>
+            <script src="{{url_for('static', filename = 'app.js')}}"></script>
+            <script src="{{url_for('static', filename = 'book.js')}}"></script>
+
+            <div class="t">
+                <h1 class="title">Recommended Movies</h1>
+                <h4 class="seemore">See All -></h4>
+            </div>
+            <div class="specialContainer"></div>
+            
+            <!-- this is a dynamic container, it will be used for multiple purposes -->
+            
+
+            <div class="movies-list">
+                <div class="card-container">
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster1.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>93% &ThinSpace; 928 votes</p>
+                            </div>
+                        </div>
+                        <h3>Theerppu</h3>
+                        <p class="detail">Drama/Thriller</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster2.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>92% &ThinSpace; 16k votes</p>
+                            </div>
+                        </div>
+                        <h3>Thallumaala</h3>
+                        <p class="detail">Action/Comedey</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster3.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>94% &ThinSpace; 14k votes</p>
+                            </div>
+                        </div>
+                        <h3>Nna Thaan Case Kodu</h3>
+                        <p class="detail">Comedy/Drama</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster4.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>59% &ThinSpace; 74k votes</p>
+                            </div>
+                        </div>
+                        <h3>Liger</h3>
+                        <p class="detail">Action/Drama/Romantic</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster5.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>87% &ThinSpace; 34k votes</p>
+                            </div>
+                        </div>
+                        <h3>Thiruchitrambalam</h3>
+                        <p class="detail">Comedy/Drama/Musical</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster6.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>92% &ThinSpace; 120k votes</p>
+                            </div>
+                        </div>
+                        <h3>Sita Ramam</h3>
+                        <p class="detail">Action/Drama/Romantic</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster7.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="thumbs-up-sharp" style="color: green;"></ion-icon>
+                                <p>3k likes</p>
+                            </div>
+                        </div>
+                        <h3>Kudukka 2025</h3>
+                        <p class="detail">Drama/Thriller</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster8.jpg')}}" class="card-img" alt="">
+                            <div class="card-body">
+                                <ion-icon name="heart-sharp"></ion-icon>
+                                <p>84% &ThinSpace; 226 votes</p>
+                            </div>
+                        </div>
+                        <h3>Peace</h3>
+                        <p class="detail">Comedy/Drama/Thriller</p>
+                    </div>
+
+                    <div class="movie">
+                        <div class="card">
+                            <img src=" {{url_for('static', filename= 'img/poster/poster9.jpg')}}" class="card-img" alt="">
+                            
+                            <div class="card-body">
+                                <ion-icon name="thumbs-up-sharp" style="color: green;"></ion-icon>
+                                <p>111 likes</p>
+                            </div>
+                        </div>
+                        <h3>Beyond The 7 Seas</h3>
+                        <p class="detail">Drama/Fantasy/Thriller</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="strip">
+<!--                 <img src="{{url_for('static', filename= 'img/strip.webp')}}" style="height:105px;" alt=""> -->
+            </div>
+
+            <div class="t">
+                <h1 class="title">The Best of Entertainment</h1>
+                <h4 class="seemore">See All -></h4>
+            </div>
+            <div class="enter-list">
+                <div class="enter-container">
+                    
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter1.webp')}}" class="card-img" alt="">
+                        
+                    </div>
+
+                    <div class="card">
+                        
+                        <img src="{{url_for('static', filename='img/enter/enter2.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter3.webp')}}" class="card-img" alt="">
+                        
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter4.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter5.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter6.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter7.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter8.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter9.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter10.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        
+                        <img src="{{url_for('static', filename='img/enter/enter11.webp')}}" class="card-img" alt="">
+                    </div>
+
+                    <div class="card">
+                        <img src="{{url_for('static', filename='img/enter/enter12.webp')}}" class="card-img" alt="">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- End content -->
+
+    </div>
+    <!-- End wrapper -->
+    <footer class="footer">
+        <div class="footer__addr">
+            <h1 class="footer__logo">BOOKMYSHOW</h1>
+    
+            <h2>Contact</h2>
+    
+            <address>
+                5534 Somewhere In. The World 22193-10212<br>
+    
+                <a class="footer__btn" href="mailto:example@gmail.com">Email Us</a>
+            </address>
+        </div>
+    
+        <ul class="footer__nav">
+            <li class="nav__item">
+                <h2 class="nav__title">Media</h2>
+    
+                <ul class="nav__ul">
+                    <li>
+                        <a href="#">Online</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Print</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Alternative Ads</a>
+                    </li>
+                </ul>
+            </li>
+    
+            <li class="nav__item nav__item--extra">
+                <h2 class="nav__title">Technology</h2>
+    
+                <ul class="nav__ul nav__ul--extra">
+                    <li>
+                        <a href="#">Hardware Design</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Software Design</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Digital Signage</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Automation</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Artificial Intelligence</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">IoT</a>
+                    </li>
+                </ul>
+            </li>
+    
+            <li class="nav__item">
+                <h2 class="nav__title">Legal</h2>
+    
+                <ul class="nav__ul">
+                    <li>
+                        <a href="#">Privacy Policy</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Terms of Use</a>
+                    </li>
+    
+                    <li>
+                        <a href="#">Sitemap</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div class="legal">
+            <p>&copy; 2019 Something. All rights reserved.</p>
+    
+            <div class="legal__links">
+                <span>Made with <span class="heart">♥</span> remotely from Anywhere</span>
+            </div>
+        </div>
+    </footer>
+    <script>
+        var ican = document.getElementById("ican");
+            ican.onclick = function () {
+                animatelil();
+                document.body.classList.toggle("light");
+                if (document.body.classList.contains("light")) {
+                    ican.src = "{{url_for('static', filename = 'img/moon.png')}}";
+                } else {
+                    ican.src = "{{url_for('static', filename = 'img/sun.png')}}";
+                }
+            }
+
+            $(document).ready(function() {
+    $('#addPointsBtn').click(function() {
+        showAddPointsForm();
+        
+        
+    });
+});
+
+function showUserDetails() {
+    
+    var userDetailsDiv = document.querySelector('.user-details');
+    if (userDetailsDiv.style.display === 'none') {
+        userDetailsDiv.style.display = 'block';
+    } else {
+        userDetailsDiv.style.display = 'none';
+    }
+}
+function hideUserDetails() {
+    console.log("Hi")
+    var userDetailsDiv = document.querySelector('.user-details');
+    userDetailsDiv.style.display = 'none';
+}
+
+
+    </script>
+
+<audio id="success-sound" src="{{url_for('static', filename='title.wav')}}" preload="auto"></audio>
+</body>
+
+</html>
